@@ -1,0 +1,12 @@
+@model PizzaStore.Client.Models.UserViewModel
+
+<section class="text-center">
+    <form asp-controller="user" asp-action="login" method="post">
+        <p>
+            <label for="name">Please sign in here:</label>
+            <input type="text" id="name" asp-for="@Model.Name" size="10">
+            <span asp-validation-for="@Model.Name" style="color: red;"></span>
+        </p>
+        <button type="submit">Login</button>
+    </form>
+</section>

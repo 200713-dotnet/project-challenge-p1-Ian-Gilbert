@@ -1,0 +1,8 @@
+@model PizzaStore.Client.Models.UserViewModel
+
+<section class="text-center">
+    <p>Hello @Model.Name, how can we help you today?</p>
+
+    <a asp-controller="order" asp-action="home" class="btn btn-primary">Order Pizzas</a>
+    <a asp-controller="user" asp-action="orderhistory" class="btn btn-secondary">View your order history</a>
+</section>
