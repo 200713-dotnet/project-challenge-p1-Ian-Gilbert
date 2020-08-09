@@ -8,6 +8,7 @@ namespace PizzaStore.Client.Controllers
     public class OrderController : Controller
     {
         private readonly PizzaStoreDbContext _db;
+        private OrderViewModel _cart { get; set; }
 
         public OrderController(PizzaStoreDbContext dbContext)
         {
@@ -16,7 +17,12 @@ namespace PizzaStore.Client.Controllers
 
         public IActionResult Home()
         {
-            return View("Order", new PizzaViewModel());
+            System.Console.WriteLine(TempData.Peek("UserLoggedIn").ToString());
+            if (_cart is null)
+            {
+                return View("Order", new PizzaViewModel());
+            }
+            return View(_cart);
         }
 
         [HttpPost]

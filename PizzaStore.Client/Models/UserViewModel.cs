@@ -7,7 +7,6 @@ namespace PizzaStore.Client.Models
     {
         public List<OrderViewModel> Orders { get; set; }
 
-        [Required(ErrorMessage = "Login failed")]
         [VerifyUser]
         public string Name { get; set; }
     }
@@ -21,7 +20,7 @@ namespace PizzaStore.Client.Models
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if ((string)value is null) // should be a database call
+            if ((string)value is null) // or user is in database
             {
                 return new ValidationResult(GetErrorMessage());
             }

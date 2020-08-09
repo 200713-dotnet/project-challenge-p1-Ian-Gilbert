@@ -29,7 +29,9 @@ namespace PizzaStore.Client.Models
             Crusts = new List<CrustModel>()
             {
                 new CrustModel() { Name = "Thin" },
-                new CrustModel() { Name = "Chicago" }
+                new CrustModel() { Name = "Thick" },
+                new CrustModel() { Name = "Garlic" },
+                new CrustModel() { Name = "Garlic Stuffed" }
             };
             Sizes = new List<SizeModel>()
             {
@@ -42,9 +44,13 @@ namespace PizzaStore.Client.Models
                 new ToppingModel() { Name = "Sauce" },
                 new ToppingModel() { Name = "Cheese" },
                 new ToppingModel() { Name = "Pepperoni" },
+                new ToppingModel() { Name = "Sausage" },
+                new ToppingModel() { Name = "Olives" },
                 new ToppingModel() { Name = "Mushrooms" },
                 new ToppingModel() { Name = "Ham" },
-                new ToppingModel() { Name = "Pineapple" }
+                new ToppingModel() { Name = "Pineapple" },
+                new ToppingModel() { Name = "Mozzarella" },
+                new ToppingModel() { Name = "Basil" }
             };
         }
     }

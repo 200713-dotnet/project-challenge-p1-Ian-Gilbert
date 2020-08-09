@@ -8,7 +8,6 @@ namespace PizzaStore.Domain.Models
         public CrustModel Crust { get; set; }
         public SizeModel Size { get; set; }
         public List<ToppingModel> Toppings { get; set; }
-        public OrderModel Order { get; set; }
         public decimal Price { get; set; }
     }
 }

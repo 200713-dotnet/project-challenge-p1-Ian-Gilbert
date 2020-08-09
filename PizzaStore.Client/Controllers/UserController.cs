@@ -9,7 +9,7 @@ namespace PizzaStore.Client.Controllers
     public class UserController : Controller
     {
         private readonly PizzaStoreDbContext _db;
-        private UserModel _user;
+        // private UserViewModel _user { get; set; }
 
         public UserController(PizzaStoreDbContext dbContext)
         {
@@ -18,12 +18,11 @@ namespace PizzaStore.Client.Controllers
 
         public IActionResult Home()
         {
-            if (_user is null)
+            if (TempData.Peek("UserLoggedIn") == null)
             {
                 return View("Login", new UserViewModel());
             }
-
-            return View(new UserViewModel() { Name = _user.Name });
+            return View(new UserViewModel() { Name = TempData.Peek("UserLoggedIn").ToString() });
         }
 
         [HttpPost]
@@ -32,11 +31,17 @@ namespace PizzaStore.Client.Controllers
         {
             if (ModelState.IsValid)
             {
-                _user = new UserModel() { Name = "Ian" };
-                return View("Home", user);
+                TempData["UserLoggedIn"] = user.Name;
+                TempData.Keep("UserLoggedIn");
+                return Redirect("/User");
             }
             return View();
+        }
 
+        public IActionResult Logout()
+        {
+            TempData.Clear();
+            return Redirect("/");
         }
 
         public IActionResult OrderHistory()

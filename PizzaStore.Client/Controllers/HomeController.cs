@@ -21,6 +21,16 @@ namespace PizzaStore.Client.Controllers
 
         public IActionResult Index()
         {
+            if (TempData.Peek("UserLoggedIn") != null)
+            {
+                return Redirect("/User");
+            }
+
+            if (TempData.Peek("StoreLoggedIn") != null)
+            {
+                return Redirect("/Store");
+            }
+
             return View();
         }
 
