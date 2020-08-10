@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using PizzaStore.Domain.Models;
 
 namespace PizzaStore.Storing.Repositories
 {
@@ -11,54 +15,103 @@ namespace PizzaStore.Storing.Repositories
             _db = dbContext;
         }
 
-        public void CreateOrder()
+        public void CreateOrder(UserModel user, StoreModel store)
         {
+            var order = new OrderModel();
+            order.UserSubmitted = _db.Users.SingleOrDefault(x => x.Name == user.Name);
+            order.StoreSubmitted = _db.Stores.SingleOrDefault(x => x.Name == store.Name);
 
+            _db.Orders.Add(order);
+            _db.SaveChanges();
         }
 
-        public void ReadOrder()
+        public OrderModel ReadOpenOrder(UserModel user)
         {
-
+            return _db.Orders
+                .Include(x => x.UserSubmitted)
+                .Include(x => x.StoreSubmitted)
+                .Include(x => x.Pizzas)
+                    .ThenInclude(x => x.Crust)
+                .Include(x => x.Pizzas)
+                    .ThenInclude(x => x.Size)
+                .Include(x => x.Pizzas)
+                    .ThenInclude(x => x.PizzaToppings)
+                        .ThenInclude(x => x.Topping)
+                .SingleOrDefault(x => x.UserSubmitted.Name == user.Name && x.Submitted == false);
         }
 
-        public void AddPizza()
+        public void AddPizza(PizzaModel pizza, UserModel user)
         {
+            var order = ReadOpenOrder(user);
+            order.Pizzas.Add(pizza);
 
+            _db.Orders.Update(order);
+            _db.SaveChanges();
         }
 
-        public void SubmitOrder()
+        public void RemovePizzas(List<int> indexes, UserModel user)
         {
+            var order = ReadOpenOrder(user);
+            var pizzas = new List<PizzaModel>();
 
+            foreach (var i in indexes)
+            {
+                pizzas.Add(order.Pizzas[i]);
+            }
+
+            foreach (var pizza in pizzas)
+            {
+                order.Pizzas.Remove(pizza);
+            }
+
+            _db.Orders.Update(order);
+            _db.SaveChanges();
         }
 
-        public void CancelOrder()
+        public void SubmitOrder(UserModel user)
         {
+            var order = ReadOpenOrder(user);
+            order.PurchaseDate = DateTime.UtcNow;
+            order.Submitted = true;
 
+            _db.Orders.Update(order);
+            _db.SaveChanges();
         }
 
-        public void ReadCrusts()
+        public void CancelOrder(UserModel user)
         {
-
+            _db.Orders.Remove(
+                _db.Orders.SingleOrDefault(x => x.UserSubmitted.Name == user.Name && !x.Submitted)
+            );
         }
 
-        public void ReadSizes()
+        public List<CrustModel> ReadCrusts()
         {
-
+            return _db.Crusts.ToList();
         }
 
-        public void ReadToppings()
+        public List<SizeModel> ReadSizes()
         {
-
+            return _db.Sizes.ToList();
         }
 
-        public void ReadPrests()
+        public List<ToppingModel> ReadToppings()
         {
-
+            return _db.Toppings.ToList();
         }
 
-        public void ReadAllStores()
+        public List<MenuPizzaModel> ReadPrests()
         {
+            return _db.MenuPizzas
+                .Include(x => x.Crust)
+                .Include(x => x.MenuPizzaToppings)
+                    .ThenInclude(x => x.Topping)
+                .ToList();
+        }
 
+        public List<StoreModel> ReadAllStores()
+        {
+            return _db.Stores.ToList();
         }
     }
 }

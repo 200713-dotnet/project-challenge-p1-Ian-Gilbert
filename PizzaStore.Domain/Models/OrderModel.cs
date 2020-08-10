@@ -16,5 +16,10 @@ namespace PizzaStore.Domain.Models
         public List<PizzaModel> Pizzas { get; set; }
         public UserModel UserSubmitted { get; set; }
         public StoreModel StoreSubmitted { get; set; }
+
+        public OrderModel()
+        {
+            Pizzas = new List<PizzaModel>();
+        }
     }
 }
