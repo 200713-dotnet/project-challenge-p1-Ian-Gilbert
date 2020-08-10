@@ -1,22 +1,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using PizzaStore.Domain.Models;
 
 namespace PizzaStore.Client.Models
 {
     public class UserViewModel
     {
         public List<OrderViewModel> Orders { get; set; }
+        public List<UserModel> UserList { get; set; }
 
+        [Required(ErrorMessage = "Login failed")]
         [VerifyUser]
         public string Name { get; set; }
     }
 
-    public class VerifyUserAttribute : ValidationAttribute
+    internal class VerifyUserAttribute : ValidationAttribute
     {
-        public string GetErrorMessage()
-        {
-            return "Login failed";
-        }
+        private string GetErrorMessage() => "Login failed";
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

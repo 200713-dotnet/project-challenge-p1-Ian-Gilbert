@@ -16,6 +16,7 @@ namespace PizzaStore.Client.Controllers
             _db = dbContext;
         }
 
+        [HttpGet]
         public IActionResult Home()
         {
             if (TempData.Peek("UserLoggedIn") == null)
@@ -38,12 +39,14 @@ namespace PizzaStore.Client.Controllers
             return View();
         }
 
+        // [HttpPost]
         public IActionResult Logout()
         {
             TempData.Clear();
             return Redirect("/");
         }
 
+        [HttpGet]
         public IActionResult OrderHistory()
         {
             return View();

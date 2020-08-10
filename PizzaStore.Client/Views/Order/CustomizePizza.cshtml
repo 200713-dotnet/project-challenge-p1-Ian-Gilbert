@@ -1,0 +1,41 @@
+@model PizzaStore.Client.Models.PizzaViewModel
+
+<section class="text-top text-right">
+    <a asp-controller="user" asp-action="logout" class="btn btn-outline-danger">Sign Out</a>
+</section>
+
+<p><h3>Add a crust and toppings to your @Model.Size Custom Pizza</h3></p>
+
+<form asp-controller="order" asp-action="customizepizza" method="post">
+    @* Hidden options (Custom pizza and chosen size) *@
+    <input type="hidden" asp-for="PizzaName" value="@Model.PizzaName">
+    <input type="hidden" asp-for="Size" value="@Model.Size">
+
+    <h5>Crust Options</h5>
+    <span asp-validation-for="Crust" style="color: red;"></span>
+    <p>
+        @foreach (var crust in @Model.Crusts)
+        {
+            <input type="radio" asp-for="@Model.Crust" id="@crust.Name" value="@crust.Name">
+            <label for="@crust.Name">@crust.Name +[price]</label>
+            <br>
+        }
+    </p>
+
+    <h5>Topping Options</h5>
+    <span asp-validation-for="SelectedToppings" style="color: red;"></span>
+    <p>
+        @foreach (var topping in @Model.Toppings)
+        {
+            <input type="checkbox" name="SelectedToppings" id="@topping.Name" asp-for="SelectedTopping" value="@topping.Name">
+            <label for="@topping.Name">@topping.Name +[price]</label>
+            <br>
+        }
+    </p>
+
+    <button class="btn btn-success" type="submit">Add Custom Pizza</button>
+</form>
+
+<section class="text-right">
+    <a class="btn btn-danger" asp-controller="order" asp-action="home">Cancel Pizza</a>
+</section>

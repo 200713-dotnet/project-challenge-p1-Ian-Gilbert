@@ -1,0 +1,51 @@
+@model PizzaStore.Client.Models.PizzaViewModel
+
+<section class="text-top text-right">
+    <a asp-controller="user" asp-action="logout" class="btn btn-outline-danger">Sign Out</a>
+</section>
+
+<p><h3>Add a new pizza to your order</h3></p>
+
+<form asp-controller="order" asp-action="addpizza" method="post">
+    <h5>Select a pizza</h5>
+    <span asp-validation-for="PizzaName" style="color: red;"></span>
+    <p>
+        @foreach (var pizza in @Model.Presets)
+        {
+            @if (pizza.Name != "Custom")
+            {
+                <input type="radio" asp-for="@Model.PizzaName" id="@pizza.Name" value="@pizza.Name">
+                <label for="@pizza.Name">
+                    @pizza.Name: @pizza.Crust.Name - [price]
+                    <br>
+                    Toppings: @string.Join(", ", pizza.Toppings.Select(x => x.Name))
+                </label>
+                <br>
+            }
+            else
+            {
+                <input type="radio" asp-for="@Model.PizzaName" id="Custom" value="Custom">
+                <label for="Custom">Custom</label>
+                <br>
+            }
+        }
+        
+    </p>
+
+    <h5>Size Options</h5>
+    <span asp-validation-for="Size" style="color: red;"></span>
+    <p>
+        @foreach (var size in @Model.Sizes)
+        {
+            <input type="radio" asp-for="@Model.Size" id="@size.Name" value="@size.Name">
+            <label for="@size.Name">@size.Name +[price]</label>
+            <br>
+        }
+    </p>
+
+    <button class="btn btn-success" type="submit">Add Pizza</button>
+</form>
+
+<section class="text-right">
+    <a class="btn btn-danger" asp-controller="order" asp-action="home">Cancel Pizza</a>
+</section>
