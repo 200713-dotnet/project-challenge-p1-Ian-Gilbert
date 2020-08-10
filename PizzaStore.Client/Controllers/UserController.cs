@@ -19,6 +19,10 @@ namespace PizzaStore.Client.Controllers
         [HttpGet]
         public IActionResult Home()
         {
+            // var pop = new PopulateDb(_db);
+            // pop.PopulateComponents();
+            // pop.PopulateEntities();
+            // pop.PopulateMenu();
             if (TempData.Peek("UserLoggedIn") == null)
             {
                 return View("Login", new UserViewModel());

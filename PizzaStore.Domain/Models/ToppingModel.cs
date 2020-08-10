@@ -5,6 +5,7 @@ namespace PizzaStore.Domain.Models
 {
     public class ToppingModel : ComponentModel
     {
-
+        public List<PizzaToppingModel> PizzaToppings { get; set; }
+        public List<MenuPizzaToppingModel> MenuPizzaToppings { get; set; }
     }
 }

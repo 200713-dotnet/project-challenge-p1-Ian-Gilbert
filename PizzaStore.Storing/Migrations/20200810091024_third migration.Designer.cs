@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaStore.Storing;
 
 namespace PizzaStore.Storing.Migrations
 {
     [DbContext(typeof(PizzaStoreDbContext))]
-    partial class PizzaStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200810091024_third migration")]
+    partial class thirdmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,19 +91,14 @@ namespace PizzaStore.Storing.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("money");
 
-                    b.Property<DateTime?>("PurchaseDate")
+                    b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2(0)");
 
                     b.Property<int>("StoreSubmittedId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Submitted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("UserSubmittedId")
                         .HasColumnType("int");

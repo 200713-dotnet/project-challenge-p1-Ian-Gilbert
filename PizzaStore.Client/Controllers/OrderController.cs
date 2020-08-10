@@ -68,33 +68,6 @@ namespace PizzaStore.Client.Controllers
             }
 
             return View("NewPizza", pizza); // form was not filled out correctly
-
-            // if (ModelState.IsValid) // if a custom pizza is finished
-            // {
-            //     // Cart.Pizzas.Add(pizza);
-            //     return Redirect("/Order/Home");
-            // }
-            // else
-            // {
-            //     // remove properties that may not be set by the user and check again
-            //     ModelState.Remove("Crust");
-            //     ModelState.Remove("SelectedToppings");
-            //     if (ModelState.IsValid)
-            //     {
-            //         if (pizza.PizzaName == "Custom") // if custom, then we add crust and toppings
-            //         {
-            //             return View("CustomizePizza", pizza);
-            //         }
-            //         else // speciatly pizza - add preset crust and toppings
-            //         {
-            //             pizza.Crust = pizza.Presets.Find(x => x.Name == pizza.PizzaName).Crust.Name;
-            //             pizza.SelectedToppings = pizza.Presets.Find(x => x.Name == pizza.PizzaName).Toppings.Select(x => x.Name).ToList();
-            //             // Cart.Pizzas.Add(pizza);
-            //             return Redirect("/Order/Home");
-            //         }
-            //     }
-            // }
-            // return View("NewPizza", pizza); // form was not filled out correctly
         }
 
         public IActionResult CustomizePizza(PizzaViewModel pizza)

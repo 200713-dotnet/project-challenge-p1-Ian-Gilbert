@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaStore.Storing;
 
 namespace PizzaStore.Storing.Migrations
 {
     [DbContext(typeof(PizzaStoreDbContext))]
-    partial class PizzaStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200810081132_first migration")]
+    partial class firstmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +47,7 @@ namespace PizzaStore.Storing.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CrustId")
+                    b.Property<int>("CrustId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -89,19 +91,14 @@ namespace PizzaStore.Storing.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("money");
 
-                    b.Property<DateTime?>("PurchaseDate")
+                    b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2(0)");
 
                     b.Property<int>("StoreSubmittedId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Submitted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("UserSubmittedId")
                         .HasColumnType("int");
@@ -248,7 +245,9 @@ namespace PizzaStore.Storing.Migrations
                     b.HasOne("PizzaStore.Domain.Models.CrustModel", "Crust")
                         .WithMany("MenuPizzas")
                         .HasForeignKey("CrustId")
-                        .HasConstraintName("FK_MenuCrustId");
+                        .HasConstraintName("FK_MenuCrustId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PizzaStore.Domain.Models.MenuPizzaToppingModel", b =>

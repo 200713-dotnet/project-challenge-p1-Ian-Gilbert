@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PizzaStore.Domain.Factories;
 using PizzaStore.Domain.Models;
+using PizzaStore.Storing;
 
 namespace PizzaStore.Client.Models
 {
@@ -31,7 +32,9 @@ namespace PizzaStore.Client.Models
         public List<string> SelectedToppings { get; set; }
         public bool SelectedTopping { get; set; }
 
-        public PizzaViewModel()
+        public PizzaViewModel() { }
+
+        public PizzaViewModel(PizzaStoreDbContext dbContext)
         {
             Presets = new List<MenuPizzaModel>()
             {
