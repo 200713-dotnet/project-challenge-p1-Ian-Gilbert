@@ -9,7 +9,7 @@ Hello @Model.User.Name, you will be able to select order options here
         Ordering from: @Model.Store.Name
     </p>
 
-    @foreach (var pizza in @Model.Pizzas)
+    @foreach (var pizza in Model.Pizzas)
     {
         <p>
             @pizza.Name: @pizza.Crust.Name, @pizza.Size.Name - @pizza.Price.ToString("C2")

@@ -1,4 +1,4 @@
-@model PizzaStore.Client.Models.UserViewModel
+@model PizzaStore.Client.Models.StoreViewModel
 
 <p><h3>Here is your order history</h3></p>
 
@@ -8,7 +8,7 @@
         <p>
             Order Total: @order.Price.ToString("C2")
             <br>
-            Submitted to @order.StoreSubmitted.Name at @order.PurchaseDate.ToLocalTime().ToString("G")
+            Submitted by @order.UserSubmitted.Name at @order.PurchaseDate.ToLocalTime().ToString("G")
 
             @foreach (var pizza in order.Pizzas)
             {
@@ -24,5 +24,5 @@
 </section>
 
 <section>
-    <a class="btn btn-primary" asp-controller="user" asp-action="home">Ok</a>
+    <a class="btn btn-primary" asp-controller="store" asp-action="home">Ok</a>
 </section>

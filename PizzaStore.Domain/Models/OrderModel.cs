@@ -10,8 +10,8 @@ namespace PizzaStore.Domain.Models
         public int Id { get; set; }
         public int UserSubmittedId { get; set; }
         public int StoreSubmittedId { get; set; }
-        public decimal? Price { get; set; }
-        public DateTime? PurchaseDate { get; set; }
+        public decimal Price { get; set; }
+        public DateTime PurchaseDate { get; set; }
         public bool Submitted { get; set; }
 
         public List<PizzaModel> Pizzas { get; set; }

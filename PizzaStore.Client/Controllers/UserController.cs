@@ -40,6 +40,7 @@ namespace PizzaStore.Client.Controllers
                 user.Name = null;
             }
 
+            ModelState.Remove("UserSelected");
             if (ModelState.IsValid)
             {
                 TempData["UserLoggedIn"] = user.Name;
@@ -59,7 +60,7 @@ namespace PizzaStore.Client.Controllers
         [HttpGet]
         public IActionResult OrderHistory()
         {
-            return View();
+            return View(userViewModel.OrderHistory(TempData.Peek("UserLoggedIn").ToString()));
         }
     }
 }

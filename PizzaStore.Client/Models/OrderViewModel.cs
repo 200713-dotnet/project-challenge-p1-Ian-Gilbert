@@ -41,14 +41,14 @@ namespace PizzaStore.Client.Models
                 return null;
             }
 
-            foreach (var pizza in order.Pizzas)
-            {
-                pizza.Toppings = new List<ToppingModel>();
-                foreach (var menuPizzaTopping in pizza.PizzaToppings)
-                {
-                    pizza.Toppings.Add(menuPizzaTopping.Topping);
-                }
-            }
+            // foreach (var pizza in order.Pizzas)
+            // {
+            //     pizza.Toppings = new List<ToppingModel>();
+            //     foreach (var pizzaTopping in pizza.PizzaToppings)
+            //     {
+            //         pizza.Toppings.Add(pizzaTopping.Topping);
+            //     }
+            // }
 
             return new OrderViewModel()
             {

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using PizzaStore.Domain.Models;
 
@@ -52,12 +53,11 @@ namespace PizzaStore.Storing
             {
                 entity.HasKey(e => e.Id).HasName("PK_OrderId");
                 entity.Property(e => e.Price)
-                    .HasColumnType("money")
-                    .IsRequired(false);
+                    .HasColumnType("money");
 
                 entity.Property(e => e.PurchaseDate)
                     .HasColumnType("datetime2(0)")
-                    .IsRequired(false);
+                    .HasDefaultValue(DateTime.UtcNow);
 
                 entity.Property(e => e.Submitted)
                     .HasDefaultValue(false);

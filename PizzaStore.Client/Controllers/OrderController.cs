@@ -12,12 +12,14 @@ namespace PizzaStore.Client.Controllers
         // private readonly PizzaStoreDbContext _db;
         private OrderViewModel orderViewModel;
         private PizzaViewModel pizzaViewModel;
+        private StoreViewModel storeViewModel;
 
         public OrderController(PizzaStoreDbContext dbContext)
         {
             // _db = dbContext;
             orderViewModel = new OrderViewModel(dbContext);
             pizzaViewModel = new PizzaViewModel(dbContext);
+            storeViewModel = new StoreViewModel(dbContext);
         }
 
         public IActionResult Home()
@@ -33,7 +35,7 @@ namespace PizzaStore.Client.Controllers
             // no order in progress, so create a new one
             if (cart is null)
             {
-                return View("StoreSelector", new StoreViewModel());
+                return View("StoreSelector", storeViewModel);
             }
 
             return View(cart); // see options for current order

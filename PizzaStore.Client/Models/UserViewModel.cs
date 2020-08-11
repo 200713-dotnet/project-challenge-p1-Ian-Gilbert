@@ -10,22 +10,34 @@ namespace PizzaStore.Client.Models
     {
         private readonly UserRepository userRepo;
 
-        public List<OrderViewModel> Orders { get; set; }
+        public List<OrderModel> Orders { get; set; }
         public List<UserModel> UserList { get; set; }
 
         [Required(ErrorMessage = "Login failed")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Must select a store")]
+        public string UserSelected { get; set; }
 
         public UserViewModel() { }
 
         public UserViewModel(PizzaStoreDbContext dbContext)
         {
             userRepo = new UserRepository(dbContext);
+
+            UserList = userRepo.ReadAllUsers();
         }
 
         public UserModel Login(string name)
         {
             return userRepo.Login(name);
+        }
+
+        public UserViewModel OrderHistory(string userName)
+        {
+            var userViewModel = new UserViewModel();
+            userViewModel.Orders = userRepo.ReadOrders(userName);
+            return userViewModel;
         }
     }
 }

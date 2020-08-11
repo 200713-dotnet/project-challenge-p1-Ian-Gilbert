@@ -31,15 +31,15 @@ namespace PizzaStore.Storing.Repositories
             return false;
         }
 
-        public List<UserModel> ReadAllUsers()
+        public List<StoreModel> ReadAllStores()
         {
-            return _db.Users.ToList();
+            return _db.Stores.ToList();
         }
 
-        public List<OrderModel> ReadOrders(StoreModel store)
+        public List<OrderModel> ReadOrders(string storeName)
         {
-            return _db.Orders
-                .Where(x => x.StoreSubmitted.Name == store.Name)
+            var orders = _db.Orders
+                .Where(x => x.StoreSubmitted.Name == storeName && x.Submitted)
                 .Include(x => x.UserSubmitted)
                 .Include(x => x.StoreSubmitted)
                 .Include(x => x.Pizzas)
@@ -50,12 +50,31 @@ namespace PizzaStore.Storing.Repositories
                     .ThenInclude(x => x.PizzaToppings)
                         .ThenInclude(x => x.Topping)
                 .ToList();
+
+            if (orders is null)
+            {
+                return null;
+            }
+
+            foreach (var order in orders)
+            {
+                foreach (var pizza in order.Pizzas)
+                {
+                    pizza.Toppings = new List<ToppingModel>();
+                    foreach (var pizzaTopping in pizza.PizzaToppings)
+                    {
+                        pizza.Toppings.Add(pizzaTopping.Topping);
+                    }
+                }
+            }
+
+            return orders;
         }
 
-        public List<OrderModel> ReadOrders(StoreModel store, UserModel user)
+        public List<OrderModel> ReadOrders(string storeName, string userName)
         {
-            return _db.Orders
-                .Where(x => x.StoreSubmitted.Name == store.Name && x.UserSubmitted.Name == user.Name)
+            var orders = _db.Orders
+                .Where(x => x.StoreSubmitted.Name == storeName && x.UserSubmitted.Name == userName && x.Submitted)
                 .Include(x => x.UserSubmitted)
                 .Include(x => x.StoreSubmitted)
                 .Include(x => x.Pizzas)
@@ -66,6 +85,25 @@ namespace PizzaStore.Storing.Repositories
                     .ThenInclude(x => x.PizzaToppings)
                         .ThenInclude(x => x.Topping)
                 .ToList();
+
+            if (orders is null)
+            {
+                return null;
+            }
+
+            foreach (var order in orders)
+            {
+                foreach (var pizza in order.Pizzas)
+                {
+                    pizza.Toppings = new List<ToppingModel>();
+                    foreach (var pizzaTopping in pizza.PizzaToppings)
+                    {
+                        pizza.Toppings.Add(pizzaTopping.Topping);
+                    }
+                }
+            }
+
+            return orders;
         }
 
         public void ViewWeeklyRevenue(StoreModel store)

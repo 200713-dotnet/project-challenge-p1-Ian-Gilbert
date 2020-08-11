@@ -20,6 +20,7 @@ namespace PizzaStore.Storing.Repositories
             var order = new OrderModel();
             order.UserSubmitted = _db.Users.SingleOrDefault(x => x.Name == userName);
             order.StoreSubmitted = _db.Stores.SingleOrDefault(x => x.Name == storeName);
+            order.Price = 0;
 
             _db.Orders.Add(order);
             _db.SaveChanges();
@@ -27,7 +28,7 @@ namespace PizzaStore.Storing.Repositories
 
         public OrderModel ReadOpenOrder(string name)
         {
-            return _db.Orders
+            var order = _db.Orders
                 .Include(x => x.UserSubmitted)
                 .Include(x => x.StoreSubmitted)
                 .Include(x => x.Pizzas)
@@ -38,6 +39,22 @@ namespace PizzaStore.Storing.Repositories
                     .ThenInclude(x => x.PizzaToppings)
                         .ThenInclude(x => x.Topping)
                 .SingleOrDefault(x => x.UserSubmitted.Name == name && x.Submitted == false);
+
+            if (order is null)
+            {
+                return null;
+            }
+
+            foreach (var pizza in order.Pizzas)
+            {
+                pizza.Toppings = new List<ToppingModel>();
+                foreach (var pizzaTopping in pizza.PizzaToppings)
+                {
+                    pizza.Toppings.Add(pizzaTopping.Topping);
+                }
+            }
+
+            return order;
         }
 
         public void AddPizza(PizzaModel pizza, string userName)
@@ -56,6 +73,8 @@ namespace PizzaStore.Storing.Repositories
             pizza.Price = pizza.CalculatePrice();
 
             order.Pizzas.Add(pizza);
+
+            order.Price = order.CalculatePrice();
 
             _db.Orders.Update(order);
             _db.SaveChanges();

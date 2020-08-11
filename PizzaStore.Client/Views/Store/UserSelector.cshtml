@@ -1,0 +1,26 @@
+@model PizzaStore.Client.Models.UserViewModel
+
+<section class="text-top text-right">
+    <a asp-controller="store" asp-action="logout" class="btn btn-outline-danger">Sign Out</a>
+</section>
+
+<form asp-controller="store" asp-action="orderhistory" method="post">
+    <h3>Select a user to view their history at your store</h3>
+
+    <p>
+        <select asp-for="@Model.UserSelected">
+            <option value="" selected disabled hidden>No Selection</option>
+            @foreach (var user in @Model.UserList)
+            {
+                <option value="@user.Name">@user.Name</option>
+            }
+        </select>
+        <span asp-validation-for="UserSelected" style="color: red;"></span>
+    </p>
+
+    <button class="btn btn-success" type="submit">Select User</button>
+</form>
+
+<section class="text-right">
+    <a class="btn btn-danger" asp-controller="store" asp-action="home">Cancel</a>
+</section>

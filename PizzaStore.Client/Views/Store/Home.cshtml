@@ -1,0 +1,14 @@
+@model PizzaStore.Client.Models.StoreViewModel
+
+<section class="text-top text-right">
+    <a asp-controller="store" asp-action="logout" class="btn btn-outline-danger">Sign Out</a>
+</section>
+
+<section class="text-center">
+    <p>
+        <h4>Hello @Model.Name, how can we help you today?</h4>
+    </p>
+
+    <a asp-controller="store" asp-action="orderhistory" class="btn btn-primary">View your order history</a>
+    <a asp-controller="store" asp-action="orderhistorybyuser" class="btn btn-secondary">Filter order history by user</a>
+</section>

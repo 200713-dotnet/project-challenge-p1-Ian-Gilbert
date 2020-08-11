@@ -1,46 +1,51 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PizzaStore.Domain.Models;
+using PizzaStore.Storing;
+using PizzaStore.Storing.Repositories;
 
 namespace PizzaStore.Client.Models
 {
     public class StoreViewModel
     {
-        public List<OrderViewModel> Orders { get; set; }
+        private readonly StoreRepository storeRepo;
+
+        public List<OrderModel> Orders { get; set; }
         public List<StoreModel> StoreList { get; set; }
 
         [Required(ErrorMessage = "Login failed")]
-        [VerifyStore]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Must select a store")]
         public string StoreSelected { get; set; }
 
-        public StoreViewModel()
+        public StoreViewModel() { }
+
+        public StoreViewModel(PizzaStoreDbContext dbContext)
         {
-            StoreList = new List<StoreModel>()
-            {
-                new StoreModel() { Name = "Store1" },
-                new StoreModel() { Name = "Store2" },
-                new StoreModel() { Name = "Store3" },
-                new StoreModel() { Name = "Store4" },
-                new StoreModel() { Name = "Store5" }
-            };
+            storeRepo = new StoreRepository(dbContext);
+
+            StoreList = storeRepo.ReadAllStores();
         }
-    }
 
-    internal class VerifyStoreAttribute : ValidationAttribute
-    {
-        private string GetErrorMessage() => "Login failed";
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        public StoreModel Login(string storeName)
         {
-            if ((string)value is null) // or store is in database
-            {
-                return new ValidationResult(GetErrorMessage());
-            }
+            return storeRepo.Login(storeName);
+        }
 
-            return ValidationResult.Success;
+        public StoreViewModel OrderHistory(string storeName)
+        {
+            var storeViewModel = new StoreViewModel();
+            storeViewModel.Orders = storeRepo.ReadOrders(storeName);
+            return storeViewModel;
+        }
+
+        public StoreViewModel OrderHistory(string storeName, string userName)
+        {
+            var storeViewModel = new StoreViewModel();
+            storeViewModel.Orders = storeRepo.ReadOrders(storeName, userName);
+            return storeViewModel;
         }
     }
 }
