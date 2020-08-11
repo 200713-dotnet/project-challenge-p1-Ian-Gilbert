@@ -47,6 +47,31 @@ namespace PizzaStore.Client.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult NewStore()
+        {
+            return View("CreateStore", new StoreViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateStore(StoreViewModel store)
+        {
+            ModelState.Remove("StoreSelected");
+            if (ModelState.IsValid)
+            {
+                var newStore = storeViewModel.CreateStore(store.Name);
+
+                if (newStore != null)
+                {
+                    TempData["StoreLoggedIn"] = store.Name;
+                    TempData.Keep("StoreLoggedIn");
+                    return Redirect("/Store");
+                }
+            }
+            return View(store);
+        }
+
         public IActionResult Logout()
         {
             TempData.Clear();

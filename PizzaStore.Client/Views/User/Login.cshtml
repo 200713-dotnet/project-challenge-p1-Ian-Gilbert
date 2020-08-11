@@ -1,6 +1,8 @@
 @model PizzaStore.Client.Models.UserViewModel
 
 <section class="text-center">
+    <p><h3>Login an existing user</h3></p>
+
     <form asp-controller="user" asp-action="login" method="post">
         <p>
             <label for="name">Please sign in here:</label>
@@ -9,4 +11,8 @@
         </p>
         <button class="btn btn-success" type="submit">Login</button>
     </form>
+</section>
+
+<section>
+    <a class="btn btn-primary" asp-controller="user" asp-action="newuser">Or create a new user</a>
 </section>

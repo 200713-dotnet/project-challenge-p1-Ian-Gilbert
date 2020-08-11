@@ -26,6 +26,7 @@ namespace PizzaStore.Storing.Repositories
                 _db.Stores.Add(
                     new StoreModel() { Name = StoreName }
                 );
+                _db.SaveChanges();
                 return true;
             }
             return false;

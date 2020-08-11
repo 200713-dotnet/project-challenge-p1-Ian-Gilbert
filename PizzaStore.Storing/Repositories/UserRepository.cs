@@ -26,6 +26,7 @@ namespace PizzaStore.Storing.Repositories
                 _db.Users.Add(
                     new UserModel() { Name = UserName }
                 );
+                _db.SaveChanges();
                 return true;
             }
             return false;

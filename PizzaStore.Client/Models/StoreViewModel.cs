@@ -34,6 +34,15 @@ namespace PizzaStore.Client.Models
             return storeRepo.Login(storeName);
         }
 
+        public StoreModel CreateStore(string name)
+        {
+            if (storeRepo.CreateStore(name))
+            {
+                return Login(name);
+            }
+            return null;
+        }
+
         public StoreViewModel OrderHistory(string storeName)
         {
             var storeViewModel = new StoreViewModel();

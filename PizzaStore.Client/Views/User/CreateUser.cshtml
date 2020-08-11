@@ -1,0 +1,18 @@
+@model PizzaStore.Client.Models.UserViewModel
+
+<section class="text-center">
+    <p><h3>Create a new user</h3></p>
+
+    <form asp-controller="user" asp-action="createuser" method="post">
+        <p>
+            <label for="name">Please enter your name here:</label>
+            <input type="text" id="name" asp-for="@Model.Name" size="10">
+            <span asp-validation-for="@Model.Name" style="color: red;"></span>
+        </p>
+        <button class="btn btn-success" type="submit">Create</button>
+    </form>
+</section>
+
+<section>
+    <a class="btn btn-primary" asp-controller="user" asp-action="home">Or login existing user</a>
+</section>
