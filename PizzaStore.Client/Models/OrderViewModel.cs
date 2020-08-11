@@ -41,15 +41,6 @@ namespace PizzaStore.Client.Models
                 return null;
             }
 
-            // foreach (var pizza in order.Pizzas)
-            // {
-            //     pizza.Toppings = new List<ToppingModel>();
-            //     foreach (var pizzaTopping in pizza.PizzaToppings)
-            //     {
-            //         pizza.Toppings.Add(pizzaTopping.Topping);
-            //     }
-            // }
-
             return new OrderViewModel()
             {
                 Price = order.CalculatePrice(),
