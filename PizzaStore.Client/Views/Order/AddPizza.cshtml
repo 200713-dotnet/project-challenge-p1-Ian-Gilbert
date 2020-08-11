@@ -16,7 +16,7 @@
             {
                 <input type="radio" asp-for="@Model.PizzaName" id="@pizza.Name" value="@pizza.Name">
                 <label for="@pizza.Name">
-                    @pizza.Name: @pizza.Crust.Name - [price]
+                    @pizza.Name: @pizza.Crust.Name - @pizza.Price.ToString("C2")
                     <br>
                     Toppings: @string.Join(", ", pizza.Toppings.Select(x => x.Name))
                 </label>
@@ -38,7 +38,7 @@
         @foreach (var size in @Model.Sizes)
         {
             <input type="radio" asp-for="@Model.Size" id="@size.Name" value="@size.Name">
-            <label for="@size.Name">@size.Name +[price]</label>
+            <label for="@size.Name">@size.Name +@size.Price.ToString("C2")</label>
             <br>
         }
     </p>

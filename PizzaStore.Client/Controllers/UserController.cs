@@ -8,12 +8,12 @@ namespace PizzaStore.Client.Controllers
     [Route("/[controller]/{action=Home}")]
     public class UserController : Controller
     {
-        private readonly PizzaStoreDbContext _db;
-        // private UserViewModel _user { get; set; }
+        // private readonly PizzaStoreDbContext _db;
+        private UserViewModel userViewModel;
 
         public UserController(PizzaStoreDbContext dbContext)
         {
-            _db = dbContext;
+            userViewModel = new UserViewModel(dbContext);
         }
 
         [HttpGet]
@@ -34,6 +34,12 @@ namespace PizzaStore.Client.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(UserViewModel user)
         {
+            // super bodge job to verify login
+            if (userViewModel.Login(user.Name) is null)
+            {
+                user.Name = null;
+            }
+
             if (ModelState.IsValid)
             {
                 TempData["UserLoggedIn"] = user.Name;

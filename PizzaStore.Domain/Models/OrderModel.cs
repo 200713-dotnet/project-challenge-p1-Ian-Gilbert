@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PizzaStore.Domain.Abstracts;
 
 namespace PizzaStore.Domain.Models
@@ -20,6 +21,11 @@ namespace PizzaStore.Domain.Models
         public OrderModel()
         {
             Pizzas = new List<PizzaModel>();
+        }
+
+        public decimal CalculatePrice()
+        {
+            return Pizzas.Sum(p => p.CalculatePrice());
         }
     }
 }

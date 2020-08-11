@@ -7,7 +7,7 @@ namespace PizzaStore.Storing.Repositories
 {
     public class StoreRepository
     {
-        private PizzaStoreDbContext _db;
+        private readonly PizzaStoreDbContext _db;
 
         public StoreRepository(PizzaStoreDbContext dbContext)
         {
@@ -19,11 +19,13 @@ namespace PizzaStore.Storing.Repositories
             return _db.Stores.SingleOrDefault(x => x.Name == name);
         }
 
-        public bool CreateStore(StoreModel store)
+        public bool CreateStore(string StoreName)
         {
-            if (Login(store.Name) == null)
+            if (Login(StoreName) == null)
             {
-                _db.Stores.Add(store);
+                _db.Stores.Add(
+                    new StoreModel() { Name = StoreName }
+                );
                 return true;
             }
             return false;

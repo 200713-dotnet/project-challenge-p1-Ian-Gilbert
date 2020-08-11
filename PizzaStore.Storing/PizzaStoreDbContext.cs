@@ -110,6 +110,7 @@ namespace PizzaStore.Storing
                     .HasConstraintName("FK_MenuCrustId");
 
                 entity.Ignore(e => e.Toppings);
+                entity.Ignore(e => e.Price);
             });
 
             builder.Entity<PizzaToppingModel>(entity =>

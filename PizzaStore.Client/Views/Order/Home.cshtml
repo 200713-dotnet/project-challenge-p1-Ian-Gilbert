@@ -1,11 +1,35 @@
-@Model PizzaStore.Client.Models.OrderViewModel
+@model PizzaStore.Client.Models.OrderViewModel
 
 Hello @Model.User.Name, you will be able to select order options here
 
-@* display cart *@
+<section>
+    <p>
+        Order Total: @Model.Price.ToString("C2")
+        <br>
+        Ordering from: @Model.Store.Name
+    </p>
+
+    @foreach (var pizza in @Model.Pizzas)
+    {
+        <p>
+            @pizza.Name: @pizza.Crust.Name, @pizza.Size.Name - @pizza.Price.ToString("C2")
+            <br>
+            Toppings: @string.Join(", ", pizza.Toppings.Select(x => x.Name))
+        </p>
+    }
+</section>
 
 @* show options for:
     - add a pizza
     - remove a pizza
     - cancel order
     - submit order *@
+<section>
+    <a class="btn btn-primary" asp-controller="order" asp-action="addpizza">Add a pizza</a>
+    <a class="btn btn-secondary" asp-controller="order" asp-action="removepizzas">Remove pizzas</a>
+    <a class="btn btn-success" asp-controller="order" asp-action="placeorder">Place order</a>
+
+    <section class="text-right">
+        <a class="btn btn-danger" asp-controller="order" asp-action="cancelorder">Cancel Order</a>
+    </section>
+</section>

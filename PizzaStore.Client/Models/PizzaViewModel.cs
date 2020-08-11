@@ -3,16 +3,20 @@ using System.ComponentModel.DataAnnotations;
 using PizzaStore.Domain.Factories;
 using PizzaStore.Domain.Models;
 using PizzaStore.Storing;
+using PizzaStore.Storing.Repositories;
 
 namespace PizzaStore.Client.Models
 {
     public class PizzaViewModel
     {
+        private readonly OrderRepository orderRepo;
+
         // out to the client
         public List<MenuPizzaModel> Presets { get; set; }
         public List<CrustModel> Crusts { get; set; }
         public List<SizeModel> Sizes { get; set; }
         public List<ToppingModel> Toppings { get; set; }
+        public decimal Price { get; set; }
 
 
         // in from the client
@@ -36,41 +40,30 @@ namespace PizzaStore.Client.Models
 
         public PizzaViewModel(PizzaStoreDbContext dbContext)
         {
-            Presets = new List<MenuPizzaModel>()
-            {
-                new MenuPizzaModel() { Name = "Cheese", Crust = new CrustModel() { Name = "Thin" }, Toppings = new List<ToppingModel>() { new ToppingModel() { Name = "Sauce" }, new ToppingModel() { Name = "Cheese" } } },
-                new MenuPizzaModel() { Name = "Pepperoni", Crust = new CrustModel() { Name = "Thin" }, Toppings = new List<ToppingModel>() { new ToppingModel() { Name = "Sauce" }, new ToppingModel() { Name = "Cheese" }, new ToppingModel() { Name = "Pepperoni" } } },
-                new MenuPizzaModel() { Name = "Hawaiian", Crust = new CrustModel() { Name = "Thin" }, Toppings = new List<ToppingModel>() { new ToppingModel() { Name = "Sauce" }, new ToppingModel() { Name = "Cheese" }, new ToppingModel() { Name = "Ham" }, new ToppingModel() { Name = "Pineapple" } } },
-                new MenuPizzaModel() { Name = "Custom" }
-            };
+            orderRepo = new OrderRepository(dbContext);
 
-            // var pf = new PizzaFactory();
-            Crusts = new List<CrustModel>()
+            Crusts = orderRepo.ReadCrusts();
+            Sizes = orderRepo.ReadSizes();
+            Toppings = orderRepo.ReadToppings();
+            Presets = orderRepo.ReadPrests();
+
+            foreach (var preset in Presets)
             {
-                new CrustModel() { Name = "Thin" },
-                new CrustModel() { Name = "Thick" },
-                new CrustModel() { Name = "Garlic" },
-                new CrustModel() { Name = "Garlic Stuffed" }
-            };
-            Sizes = new List<SizeModel>()
-            {
-                new SizeModel() { Name = "Small" },
-                new SizeModel() { Name = "Medium" },
-                new SizeModel() { Name = "Large" }
-            };
-            Toppings = new List<ToppingModel>()
-            {
-                new ToppingModel() { Name = "Sauce" },
-                new ToppingModel() { Name = "Cheese" },
-                new ToppingModel() { Name = "Pepperoni" },
-                new ToppingModel() { Name = "Sausage" },
-                new ToppingModel() { Name = "Olives" },
-                new ToppingModel() { Name = "Mushrooms" },
-                new ToppingModel() { Name = "Ham" },
-                new ToppingModel() { Name = "Pineapple" },
-                new ToppingModel() { Name = "Mozzarella" },
-                new ToppingModel() { Name = "Basil" }
-            };
+                preset.Toppings = new List<ToppingModel>();
+                foreach (var menuPizzaTopping in preset.MenuPizzaToppings)
+                {
+                    preset.Toppings.Add(menuPizzaTopping.Topping);
+                }
+
+                if (preset.Name == "Custom")
+                {
+                    preset.Price = 0;
+                }
+                else
+                {
+                    preset.Price = preset.CalculatePrice();
+                }
+            }
         }
     }
 }

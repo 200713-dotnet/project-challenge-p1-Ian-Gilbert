@@ -17,9 +17,9 @@ namespace PizzaStore.Domain.Models
         public List<PizzaToppingModel> PizzaToppings { get; set; }
         public OrderModel Order { get; set; }
 
-        public void CalculatePrice()
+        public decimal CalculatePrice()
         {
-            Price = Crust.Price + Size.Price + Toppings.Sum(t => t.Price);
+            return Crust.Price + Size.Price + Toppings.Sum(t => t.Price);
         }
     }
 }

@@ -1,31 +1,31 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PizzaStore.Domain.Models;
+using PizzaStore.Storing;
+using PizzaStore.Storing.Repositories;
 
 namespace PizzaStore.Client.Models
 {
     public class UserViewModel
     {
+        private readonly UserRepository userRepo;
+
         public List<OrderViewModel> Orders { get; set; }
         public List<UserModel> UserList { get; set; }
 
         [Required(ErrorMessage = "Login failed")]
-        [VerifyUser]
         public string Name { get; set; }
-    }
 
-    internal class VerifyUserAttribute : ValidationAttribute
-    {
-        private string GetErrorMessage() => "Login failed";
+        public UserViewModel() { }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        public UserViewModel(PizzaStoreDbContext dbContext)
         {
-            if ((string)value is null) // or user is in database
-            {
-                return new ValidationResult(GetErrorMessage());
-            }
+            userRepo = new UserRepository(dbContext);
+        }
 
-            return ValidationResult.Success;
+        public UserModel Login(string name)
+        {
+            return userRepo.Login(name);
         }
     }
 }

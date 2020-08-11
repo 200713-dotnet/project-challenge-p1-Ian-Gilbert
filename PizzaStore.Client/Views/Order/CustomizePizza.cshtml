@@ -17,18 +17,18 @@
         @foreach (var crust in @Model.Crusts)
         {
             <input type="radio" asp-for="@Model.Crust" id="@crust.Name" value="@crust.Name">
-            <label for="@crust.Name">@crust.Name +[price]</label>
+            <label for="@crust.Name">@crust.Name +@crust.Price.ToString("C2")</label>
             <br>
         }
     </p>
 
-    <h5>Topping Options</h5>
+    <h5>Topping Options (Pick 2 - 5)</h5>
     <span asp-validation-for="SelectedToppings" style="color: red;"></span>
     <p>
         @foreach (var topping in @Model.Toppings)
         {
             <input type="checkbox" name="SelectedToppings" id="@topping.Name" asp-for="SelectedTopping" value="@topping.Name">
-            <label for="@topping.Name">@topping.Name +[price]</label>
+            <label for="@topping.Name">@topping.Name +@topping.Price.ToString("C2")</label>
             <br>
         }
     </p>

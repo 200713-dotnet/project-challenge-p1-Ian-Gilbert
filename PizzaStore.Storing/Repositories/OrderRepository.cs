@@ -8,24 +8,24 @@ namespace PizzaStore.Storing.Repositories
 {
     public class OrderRepository
     {
-        private PizzaStoreDbContext _db;
+        private readonly PizzaStoreDbContext _db;
 
         public OrderRepository(PizzaStoreDbContext dbContext)
         {
             _db = dbContext;
         }
 
-        public void CreateOrder(UserModel user, StoreModel store)
+        public void CreateOrder(string userName, string storeName)
         {
             var order = new OrderModel();
-            order.UserSubmitted = _db.Users.SingleOrDefault(x => x.Name == user.Name);
-            order.StoreSubmitted = _db.Stores.SingleOrDefault(x => x.Name == store.Name);
+            order.UserSubmitted = _db.Users.SingleOrDefault(x => x.Name == userName);
+            order.StoreSubmitted = _db.Stores.SingleOrDefault(x => x.Name == storeName);
 
             _db.Orders.Add(order);
             _db.SaveChanges();
         }
 
-        public OrderModel ReadOpenOrder(UserModel user)
+        public OrderModel ReadOpenOrder(string name)
         {
             return _db.Orders
                 .Include(x => x.UserSubmitted)
@@ -37,52 +37,77 @@ namespace PizzaStore.Storing.Repositories
                 .Include(x => x.Pizzas)
                     .ThenInclude(x => x.PizzaToppings)
                         .ThenInclude(x => x.Topping)
-                .SingleOrDefault(x => x.UserSubmitted.Name == user.Name && x.Submitted == false);
+                .SingleOrDefault(x => x.UserSubmitted.Name == name && x.Submitted == false);
         }
 
-        public void AddPizza(PizzaModel pizza, UserModel user)
+        public void AddPizza(PizzaModel pizza, string userName)
         {
-            var order = ReadOpenOrder(user);
+            var order = ReadOpenOrder(userName);
+
+            pizza.PizzaToppings = new List<PizzaToppingModel>();
+            foreach (var topping in pizza.Toppings)
+            {
+                pizza.PizzaToppings.Add(new PizzaToppingModel()
+                {
+                    Topping = topping
+                });
+            }
+
+            pizza.Price = pizza.CalculatePrice();
+
             order.Pizzas.Add(pizza);
 
             _db.Orders.Update(order);
             _db.SaveChanges();
         }
 
-        public void RemovePizzas(List<int> indexes, UserModel user)
+        public void RemovePizzas(List<int> indexes, string userName)
         {
-            var order = ReadOpenOrder(user);
-            var pizzas = new List<PizzaModel>();
+            var order = ReadOpenOrder(userName);
 
             foreach (var i in indexes)
             {
-                pizzas.Add(order.Pizzas[i]);
+                // _db.Pizzas.Remove(order.Pizzas[i]);
+                var id = order.Pizzas[i].Id;
+                _db.PizzaToppings.RemoveRange(
+                    _db.PizzaToppings.Where(x => x.PizzaId == id)
+                );
+                _db.Pizzas.Remove(_db.Pizzas.SingleOrDefault(x => x.Id == id));
             }
 
-            foreach (var pizza in pizzas)
-            {
-                order.Pizzas.Remove(pizza);
-            }
-
-            _db.Orders.Update(order);
             _db.SaveChanges();
         }
 
-        public void SubmitOrder(UserModel user)
+        public void SubmitOrder(string userName)
         {
-            var order = ReadOpenOrder(user);
+            var order = ReadOpenOrder(userName);
             order.PurchaseDate = DateTime.UtcNow;
             order.Submitted = true;
+            order.Price = order.CalculatePrice();
 
             _db.Orders.Update(order);
             _db.SaveChanges();
         }
 
-        public void CancelOrder(UserModel user)
+        public void CancelOrder(string userName)
         {
+            var order = ReadOpenOrder(userName);
+
+            foreach (var id in order.Pizzas.Select(x => x.Id))
+            {
+                _db.PizzaToppings.RemoveRange(
+                    _db.PizzaToppings.Where(x => x.PizzaId == id)
+                );
+                _db.Pizzas.Remove(
+                    _db.Pizzas.SingleOrDefault(x => x.Id == id)
+                );
+            }
+
             _db.Orders.Remove(
-                _db.Orders.SingleOrDefault(x => x.UserSubmitted.Name == user.Name && !x.Submitted)
+                _db.Orders.SingleOrDefault(x => x.UserSubmitted.Name == userName && !x.Submitted)
             );
+
+            _db.SaveChanges();
         }
 
         public List<CrustModel> ReadCrusts()
